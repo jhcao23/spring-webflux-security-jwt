@@ -34,9 +34,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+import org.springframework.security.web.server.savedrequest.NoOpServerRequestCache;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -73,7 +77,10 @@ public class SecuredRestApplication {
      */
     @Bean
     public MapReactiveUserDetailsService userDetailsRepository() {
-        UserDetails user = User.withDefaultPasswordEncoder()
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        UserDetails user = User
+//                .withDefaultPasswordEncoder()
+                .builder().passwordEncoder(encoder::encode)
                 .username("user")
                 .password("user")
                 .roles("USER", "ADMIN")
@@ -94,7 +101,12 @@ public class SecuredRestApplication {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 
         http
-                .authorizeExchange()
+                .csrf().disable()
+//                .formLogin().disable()
+                .requestCache().requestCache(NoOpServerRequestCache.getInstance())
+                .and()
+                    .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
+                    .authorizeExchange()
                     .pathMatchers("/login", "/")
                     .authenticated()
                 .and()
@@ -103,7 +115,9 @@ public class SecuredRestApplication {
                     .pathMatchers("/api/**")
                     .authenticated()
                 .and()
-                    .addFilterAt(bearerAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
+                    .addFilterAt(bearerAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
+
+        ;
 
         return http.build();
     }
@@ -148,7 +162,8 @@ public class SecuredRestApplication {
         bearerAuthenticationFilter = new AuthenticationWebFilter(authManager);
         bearerConverter = new ServerHttpBearerAuthenticationConverter();
 
-        bearerAuthenticationFilter.setAuthenticationConverter(bearerConverter);
+//        bearerAuthenticationFilter.setAuthenticationConverter(bearerConverter);
+        bearerAuthenticationFilter.setServerAuthenticationConverter(bearerConverter::apply);
         bearerAuthenticationFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/api/**"));
 
         return bearerAuthenticationFilter;

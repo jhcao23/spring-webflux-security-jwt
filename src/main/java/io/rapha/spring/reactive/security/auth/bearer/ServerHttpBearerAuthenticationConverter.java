@@ -20,8 +20,8 @@
 package io.rapha.spring.reactive.security.auth.bearer;
 
 import io.rapha.spring.reactive.security.auth.jwt.AuthorizationHeaderPayload;
-import io.rapha.spring.reactive.security.auth.jwt.UsernamePasswordAuthenticationBearer;
 import io.rapha.spring.reactive.security.auth.jwt.JWTCustomVerifier;
+import io.rapha.spring.reactive.security.auth.jwt.UsernamePasswordAuthenticationBearer;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
