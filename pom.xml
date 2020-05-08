@@ -5,7 +5,7 @@
 
 	<groupId>io.rapha.spring</groupId>
 	<artifactId>reactive-spring-jwt</artifactId>
-	<version>0.4.2-SNAPSHOT</version>
+	<version>0.4.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>reactive-spring-jwt</name>
@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.1.RELEASE</version>
+		<version>2.2.7.RELEASE</version>
 		<relativePath/>
 	</parent>
 
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>nimbus-jose-jwt</artifactId>
-			<version>6.4.2</version>
+			<version>8.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
