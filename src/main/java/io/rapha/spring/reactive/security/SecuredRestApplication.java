@@ -39,7 +39,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
-import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 import org.springframework.security.web.server.savedrequest.NoOpServerRequestCache;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.web.server.ServerWebExchange;
@@ -102,10 +101,11 @@ public class SecuredRestApplication {
 
         http
                 .csrf().disable()
-//                .formLogin().disable()
+                .formLogin().disable()
+                .httpBasic().disable()
                 .requestCache().requestCache(NoOpServerRequestCache.getInstance())
                 .and()
-                    .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
+//                    .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                     .authorizeExchange()
                     .pathMatchers("/login", "/")
                     .authenticated()
