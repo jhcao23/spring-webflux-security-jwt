@@ -238,7 +238,7 @@ public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http)
 
 With Maven
 ```shell
-$ mvn spring-boot:run
+mvn clean install spring-boot:run
 ```
 
 With Gradle
